@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel — NagarBarta</title>
+    <link rel="stylesheet" href="dashboard.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+</head>
+<body>
+
+<!-- Navigation -->
+<nav>
+    <h1>🛡️ NagarBarta Admin</h1>
+    <div class="nav-right">
+        <span class="admin-badge">🛡️ ADMIN</span>
+        <span class="nav-welcome" id="welcome-msg"></span>
+        <button class="btn-logout" onclick="logout()">Sign Out</button>
+    </div>
+</nav>
+
+<!-- Page Hero -->
+<div class="page-hero">
+    <h2>Reports Dashboard</h2>
+    <p>Review, manage and resolve community problem reports</p>
+</div>
+
+<div class="main-container">
+
+    <!-- Stats Grid (4 boxes) -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon blue">📋</div>
+            <div class="stat-info">
+                <h3 id="total-count">—</h3>
+                <p>Total Reports</p>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon amber">⏳</div>
+            <div class="stat-info">
+                <h3 id="pending-count">—</h3>
+                <p>Pending</p>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon green">✅</div>
+            <div class="stat-info">
+                <h3 id="resolved-count">—</h3>
+                <p>Resolved</p>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon purple">📊</div>
+            <div class="stat-info">
+                <h3 id="resolve-rate">—</h3>
+                <p>Resolve Rate</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- All Reports Card -->
+    <div class="card">
+        <div class="card-header">
+            <h2>📋 All Reports</h2>
+            <button class="btn-export" onclick="exportPDF()">📄 Export PDF</button>
+        </div>
+
+        <!-- Filters -->
+        <div class="filter-bar">
+            <select id="filter-status" onchange="filterReports()">
+                <option value="all">All Status</option>
+                <option value="Pending">⏳ Pending</option>
+                <option value="Resolved">✅ Resolved</option>
+            </select>
+            <select id="filter-category" onchange="filterReports()">
+                <option value="all">All Categories</option>
+                <option value="Road">🛣️ Road</option>
+                <option value="Bridge">🌉 Bridge</option>
+                <option value="Footpath">🚶 Footpath</option>
+                <option value="Water">💧 Water</option>
+                <option value="Drainage">🌊 Drainage</option>
+                <option value="Sewage">🚿 Sewage</option>
+                <option value="Electricity">⚡ Electricity</option>
+                <option value="Street Light">💡 Street Light</option>
+                <option value="Gas">🔥 Gas</option>
+                <option value="Garbage">🗑️ Garbage</option>
+                <option value="Tree">🌳 Tree</option>
+                <option value="Air Pollution">💨 Air Pollution</option>
+                <option value="Noise Pollution">🔊 Noise</option>
+                <option value="Water Pollution">🏭 Water Pollution</option>
+                <option value="Transport">🚌 Transport</option>
+                <option value="Hospital">🏥 Hospital</option>
+                <option value="School">🏫 School</option>
+                <option value="Park">🌳 Park</option>
+                <option value="Market">🏪 Market</option>
+                <option value="Government Office">🏛️ Gov Office</option>
+                <option value="Building Safety">🏗️ Building Safety</option>
+                <option value="Traffic">🚦 Traffic</option>
+                <option value="Crime">🚨 Crime</option>
+                <option value="Fire Hazard">🔥 Fire Hazard</option>
+                <option value="Animal">🐾 Animal</option>
+                <option value="Other">📌 Other</option>
+            </select>
+            <input type="text" id="search-input"
+                placeholder="🔍 Search title or location..."
+                oninput="filterReports()">
+        </div>
+
+        <!-- Report List -->
+        <div id="admin-reports-list">
+            <div class="skeleton"></div>
+            <div class="skeleton" style="height:60px"></div>
+            <div class="skeleton" style="height:60px"></div>
+        </div>
+    </div>
+
+    <footer style="
+    text-align: center;
+    padding: 28px 20px;
+    margin-top: 8px;
+    border-top: 1px solid #e2ede5;
+    font-size: 13px;
+    color: #5a7a65;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+">
+    © 2025 <strong style="color:#2d6a4f;">NagarBarta</strong> &nbsp;·&nbsp;
+    Admin Panel &nbsp;·&nbsp;
+    Created by <strong style="color:#2d6a4f;">MD. Huzaifa Orfa Siam Uddin</strong>
+</footer>
+
+</div>
+
+<script src="admin.js"></script>
+</body>
+</html>

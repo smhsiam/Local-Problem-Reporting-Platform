@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard — NagarBarta</title>
+    <link rel="stylesheet" href="dashboard.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+<body>
+
+<!-- Navigation -->
+<nav>
+    <h1>🏙️ NagarBarta</h1>
+    <div class="nav-right">
+        <div class="nav-avatar" id="nav-avatar">?</div>
+        <span class="nav-welcome" id="welcome-msg"></span>
+        <button class="btn-logout" onclick="logout()">Sign Out</button>
+    </div>
+</nav>
+
+<!-- Page Hero -->
+<div class="page-hero">
+    <h2>Report a Problem</h2>
+    <p>Help improve your community — submit issues for review</p>
+</div>
+
+<div class="main-container">
+
+    <!-- Submit Form Card -->
+    <div class="card">
+        <div class="card-header">
+            <h2>📝 New Problem Report</h2>
+        </div>
+
+        <div class="form-grid">
+
+            <!-- Problem Title -->
+            <div class="form-group full">
+                <label>Problem Title *</label>
+                <input type="text" id="title" placeholder="e.g. Large pothole on main road near school">
+            </div>
+
+            <!-- Category -->
+            <div class="form-group">
+                <label>Category *</label>
+                <select id="category">
+                    <option value="">— Select Category —</option>
+                    <optgroup label="🛣️ Infrastructure">
+                        <option value="Road">🛣️ Road / Pothole</option>
+                        <option value="Bridge">🌉 Bridge / Overpass</option>
+                        <option value="Footpath">🚶 Footpath / Sidewalk</option>
+                    </optgroup>
+                    <optgroup label="💧 Utilities">
+                        <option value="Water">💧 Water Supply</option>
+                        <option value="Drainage">🌊 Drainage / Flooding</option>
+                        <option value="Sewage">🚿 Sewage / Sanitation</option>
+                        <option value="Electricity">⚡ Electricity / Power</option>
+                        <option value="Street Light">💡 Street Light</option>
+                        <option value="Gas">🔥 Gas Supply</option>
+                    </optgroup>
+                    <optgroup label="🌿 Environment">
+                        <option value="Garbage">🗑️ Garbage / Waste</option>
+                        <option value="Tree">🌳 Fallen Tree / Plant</option>
+                        <option value="Air Pollution">💨 Air Pollution</option>
+                        <option value="Noise Pollution">🔊 Noise Pollution</option>
+                        <option value="Water Pollution">🏭 Water Pollution</option>
+                    </optgroup>
+                    <optgroup label="🏛️ Public Services">
+                        <option value="Transport">🚌 Public Transport</option>
+                        <option value="Hospital">🏥 Hospital / Health</option>
+                        <option value="School">🏫 School / Education</option>
+                        <option value="Park">🌳 Park / Recreation</option>
+                        <option value="Market">🏪 Market / Bazaar</option>
+                        <option value="Government Office">🏛️ Government Office</option>
+                    </optgroup>
+                    <optgroup label="🔒 Safety">
+                        <option value="Building Safety">🏗️ Building Safety</option>
+                        <option value="Traffic">🚦 Traffic / Signal</option>
+                        <option value="Crime">🚨 Crime / Security</option>
+                        <option value="Fire Hazard">🔥 Fire Hazard</option>
+                    </optgroup>
+                    <optgroup label="📌 Other">
+                        <option value="Animal">🐾 Stray Animal</option>
+                        <option value="Other">📌 Other</option>
+                    </optgroup>
+                </select>
+            </div>
+
+            <!-- District Dropdown (64 districts) -->
+            <div class="form-group">
+                <label>District *</label>
+                <div class="district-wrapper">
+                    <select id="district-select" onchange="onDistrictChange(this.value)">
+                        <option value="">— Select District —</option>
+
+                        <optgroup label="Dhaka Division">
+                            <option value="Dhaka|23.8103|90.4125">Dhaka</option>
+                            <option value="Gazipur|23.9999|90.4203">Gazipur</option>
+                            <option value="Narayanganj|23.6238|90.4996">Narayanganj</option>
+                            <option value="Tangail|24.2513|89.9167">Tangail</option>
+                            <option value="Kishoreganj|24.4449|90.7768">Kishoreganj</option>
+                            <option value="Manikganj|23.8624|90.0049">Manikganj</option>
+                            <option value="Munshiganj|23.5422|90.5302">Munshiganj</option>
+                            <option value="Narsingdi|23.9229|90.7152">Narsingdi</option>
+                            <option value="Faridpur|23.6070|89.8429">Faridpur</option>
+                            <option value="Gopalganj|23.0050|89.8267">Gopalganj</option>
+                            <option value="Madaripur|23.1640|90.1994">Madaripur</option>
+                            <option value="Rajbari|23.7574|89.6437">Rajbari</option>
+                            <option value="Shariatpur|23.2423|90.4348">Shariatpur</option>
+                        </optgroup>
+
+                        <optgroup label="Chittagong Division">
+                            <option value="Chittagong|22.3569|91.7832">Chittagong</option>
+                            <option value="Cox's Bazar|21.4272|92.0058">Cox's Bazar</option>
+                            <option value="Comilla|23.4607|91.1809">Comilla</option>
+                            <option value="Brahmanbaria|23.9570|91.1115">Brahmanbaria</option>
+                            <option value="Chandpur|23.2333|90.6516">Chandpur</option>
+                            <option value="Feni|23.0160|91.3974">Feni</option>
+                            <option value="Lakshmipur|22.9449|90.8412">Lakshmipur</option>
+                            <option value="Noakhali|22.8696|91.0992">Noakhali</option>
+                            <option value="Bandarban|22.1953|92.2184">Bandarban</option>
+                            <option value="Khagrachhari|23.1193|91.9847">Khagrachhari</option>
+                            <option value="Rangamati|22.6552|92.1599">Rangamati</option>
+                        </optgroup>
+
+                        <optgroup label="Rajshahi Division">
+                            <option value="Rajshahi|24.3745|88.6042">Rajshahi</option>
+                            <option value="Bogura|24.8510|89.3697">Bogura</option>
+                            <option value="Joypurhat|25.1035|89.0242">Joypurhat</option>
+                            <option value="Naogaon|24.8132|88.9343">Naogaon</option>
+                            <option value="Natore|24.4199|89.0005">Natore</option>
+                            <option value="Chapainawabganj|24.5965|88.2769">Chapainawabganj</option>
+                            <option value="Pabna|24.0064|89.2372">Pabna</option>
+                            <option value="Sirajganj|24.4534|89.7006">Sirajganj</option>
+                        </optgroup>
+
+                        <optgroup label="Khulna Division">
+                            <option value="Khulna|22.8456|89.5403">Khulna</option>
+                            <option value="Jessore|23.1667|89.2166">Jessore</option>
+                            <option value="Satkhira|22.7185|89.0705">Satkhira</option>
+                            <option value="Narail|23.1726|89.5120">Narail</option>
+                            <option value="Magura|23.4867|89.4197">Magura</option>
+                            <option value="Jhenaidah|23.5448|89.1547">Jhenaidah</option>
+                            <option value="Kushtia|23.8909|89.1221">Kushtia</option>
+                            <option value="Chuadanga|23.6401|88.8416">Chuadanga</option>
+                            <option value="Meherpur|23.7622|88.6319">Meherpur</option>
+                            <option value="Bagerhat|22.6602|89.7854">Bagerhat</option>
+                        </optgroup>
+
+                        <optgroup label="Sylhet Division">
+                            <option value="Sylhet|24.8949|91.8687">Sylhet</option>
+                            <option value="Habiganj|24.3745|91.4152">Habiganj</option>
+                            <option value="Moulvibazar|24.4829|91.7774">Moulvibazar</option>
+                            <option value="Sunamganj|25.0658|91.3950">Sunamganj</option>
+                        </optgroup>
+
+                        <optgroup label="Barisal Division">
+                            <option value="Barisal|22.7010|90.3535">Barisal</option>
+                            <option value="Bhola|22.3594|90.8135">Bhola</option>
+                            <option value="Jhalokati|22.6348|90.1980">Jhalokati</option>
+                            <option value="Patuakhali|22.3596|90.3288">Patuakhali</option>
+                            <option value="Pirojpur|22.5793|89.9751">Pirojpur</option>
+                            <option value="Barguna|22.0961|89.9948">Barguna</option>
+                        </optgroup>
+
+                        <optgroup label="Rangpur Division">
+                            <option value="Rangpur|25.7439|89.2752">Rangpur</option>
+                            <option value="Gaibandha|25.3288|89.5288">Gaibandha</option>
+                            <option value="Kurigram|25.8076|89.6360">Kurigram</option>
+                            <option value="Lalmonirhat|25.9923|89.2847">Lalmonirhat</option>
+                            <option value="Nilphamari|25.9317|88.8560">Nilphamari</option>
+                            <option value="Panchagarh|26.3408|88.5551">Panchagarh</option>
+                            <option value="Thakurgaon|26.0336|88.4616">Thakurgaon</option>
+                            <option value="Dinajpur|25.6279|88.6338">Dinajpur</option>
+                        </optgroup>
+
+                        <optgroup label="Mymensingh Division">
+                            <option value="Mymensingh|24.7471|90.4203">Mymensingh</option>
+                            <option value="Jamalpur|24.9375|89.9377">Jamalpur</option>
+                            <option value="Netrokona|24.8710|90.7270">Netrokona</option>
+                            <option value="Sherpur|25.0196|90.0149">Sherpur</option>
+                        </optgroup>
+
+                    </select>
+                </div>
+            </div>
+
+            <!-- Location (auto-filled) -->
+            <div class="form-group full">
+                <label>📍 Exact Location</label>
+                <input type="text" id="location"
+                    placeholder="Select a district above, or click on the map below"
+                    readonly>
+                <input type="hidden" id="lat">
+                <input type="hidden" id="lng">
+            </div>
+
+            <!-- Map -->
+            <div class="form-group full">
+                <label>🗺️ Pin Exact Spot on Map</label>
+                <div id="map"></div>
+                <p class="map-hint">💡 Click anywhere on the map to pin the exact location. Address auto-fills above.</p>
+            </div>
+
+            <!-- Description -->
+            <div class="form-group full">
+                <label>Description *</label>
+                <textarea id="description"
+                    placeholder="Describe the problem in detail — what it is, how severe, how long it has been there...">
+                </textarea>
+            </div>
+
+            <!-- Photo Upload -->
+            <div class="form-group full">
+                <label>📷 Attach Photo (optional)</label>
+                <div class="file-upload-box" onclick="document.getElementById('image').click()">
+                    <div class="upload-icon">📸</div>
+                    <p>Click to upload or drag a photo here</p>
+                    <p style="font-size:11px;color:#94a3b8;margin-top:4px;">JPG, PNG, WEBP — Max 5MB</p>
+                    <div class="file-name" id="file-name-display"></div>
+                    <input type="file" id="image" accept="image/*" onchange="updateFileName(this)">
+                </div>
+            </div>
+
+        </div>
+
+        <button class="btn-submit" onclick="submitReport()">🚀 Submit Report</button>
+        <div id="submit-msg"></div>
+    </div>
+
+    <!-- All Reports Card -->
+    <div class="card">
+        <div class="card-header">
+            <h2>📋 All Reported Problems</h2>
+            <span id="report-count" style="font-size:13px;color:#64748b;font-weight:500;"></span>
+        </div>
+
+        <!-- Filters -->
+        <div class="filter-bar">
+            <select id="filter-status" onchange="filterReports()">
+                <option value="all">All Status</option>
+                <option value="Pending">⏳ Pending</option>
+                <option value="Resolved">✅ Resolved</option>
+            </select>
+            <select id="filter-category" onchange="filterReports()">
+                <option value="all">All Categories</option>
+                <option value="Road">🛣️ Road</option>
+                <option value="Bridge">🌉 Bridge</option>
+                <option value="Footpath">🚶 Footpath</option>
+                <option value="Water">💧 Water</option>
+                <option value="Drainage">🌊 Drainage</option>
+                <option value="Sewage">🚿 Sewage</option>
+                <option value="Electricity">⚡ Electricity</option>
+                <option value="Street Light">💡 Street Light</option>
+                <option value="Gas">🔥 Gas</option>
+                <option value="Garbage">🗑️ Garbage</option>
+                <option value="Tree">🌳 Tree</option>
+                <option value="Air Pollution">💨 Air Pollution</option>
+                <option value="Noise Pollution">🔊 Noise</option>
+                <option value="Water Pollution">🏭 Water Pollution</option>
+                <option value="Transport">🚌 Transport</option>
+                <option value="Hospital">🏥 Hospital</option>
+                <option value="School">🏫 School</option>
+                <option value="Park">🌳 Park</option>
+                <option value="Market">🏪 Market</option>
+                <option value="Government Office">🏛️ Gov Office</option>
+                <option value="Building Safety">🏗️ Building Safety</option>
+                <option value="Traffic">🚦 Traffic</option>
+                <option value="Crime">🚨 Crime</option>
+                <option value="Fire Hazard">🔥 Fire Hazard</option>
+                <option value="Animal">🐾 Animal</option>
+                <option value="Other">📌 Other</option>
+            </select>
+            <input type="text" id="search-input"
+                placeholder="🔍 Search title or location..."
+                oninput="filterReports()">
+        </div>
+
+        <!-- Report List -->
+        <div id="reports-list">
+            <div class="skeleton"></div>
+            <div class="skeleton" style="height:60px;"></div>
+            <div class="skeleton" style="height:60px;"></div>
+        </div>
+    </div>
+
+    <footer style="
+    text-align: center;
+    padding: 28px 20px;
+    margin-top: 8px;
+    border-top: 1px solid #e2ede5;
+    font-size: 13px;
+    color: #5a7a65;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+">
+    © 2025 <strong style="color:#2d6a4f;">NagarBarta</strong> &nbsp;·&nbsp;
+    Built for Bangladesh 🇧🇩 &nbsp;·&nbsp;
+    Created by <strong style="color:#2d6a4f;">MD. Huzaifa Orfa Siam Uddin</strong>
+</footer>
+
+</div>
+
+<script src="dashboard.js"></script>
+</body>
+</html>
